@@ -6,7 +6,10 @@
  * @flow
  */
 
-import React from 'react';
+import { NavigationContainer } from '@react-navigation/native'
+import React, { Component } from 'react';
+import ImageCalculator from './assets/imgs/calculator.png'
+import { createStackNavigator } from '@react-navigation/stack'
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,6 +17,7 @@ import {
   View,
   Text,
   StatusBar,
+  Image
 } from 'react-native';
 
 import {
@@ -35,7 +39,7 @@ const initialState = {
   current: 0
 }
 
-class App extends React.Component{
+class Calculator extends React.Component{
   state = {
     ...initialState
   }
@@ -118,6 +122,23 @@ class App extends React.Component{
   }
 }
 
+class SplashScreen extends Component{
+
+  componentDidMount = () => {
+    setTimeout(() => {
+      this.props.navigation.navigate('calculator')
+    }, 2500)
+  }
+
+  render() {
+    return (
+      <View style={styles.splashContainer}>
+        <Image source={ImageCalculator} style={styles.image}/>
+      </View>
+    )
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -125,7 +146,30 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap'
+  },
+  splashContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  image: {
+    width: 120,
+    height: 120
   }
 });
 
-export default App;
+const Switch = createStackNavigator()
+
+export default class App extends Component{
+
+  render() {
+    return (
+      <NavigationContainer>
+        <Switch.Navigator initialRouteName='splash' headerMode={false}>
+          <Switch.Screen component={Calculator} name='calculator' />
+          <Switch.Screen component={SplashScreen} name='splash'/>
+        </Switch.Navigator>
+      </NavigationContainer>
+    )
+  }
+}
